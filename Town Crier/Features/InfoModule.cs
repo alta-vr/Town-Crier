@@ -1292,6 +1292,12 @@ public class WhoIs : CrierModuleBase
 	[Command("matssu")]
 	public async Task Matssu() => await ReplyAsync("An adventurer who explored the depths of the source code... The first contributor!");
 
+	[Command("thelegend27")]
+	public async Task TheLegend27() => await ReplyAsync("Some say TheLegend27 is the first Game of War player ever. Born from *fire*...");
+	
+	[Command("taz"), Alias("taz prime", "mantax64", "mantax")]
+	public async Task taz() => await ReplyAsync("Taz Prime? I would advise you to avoid eye contact with them...");
+	
 	static readonly string[] UnknownReplies = new string[]
 	{
 		"Ahh yes... {0}...",
