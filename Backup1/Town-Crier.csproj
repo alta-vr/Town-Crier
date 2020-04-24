@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>Town_Crier</RootNamespace>
     <AssemblyName>Town-Crier</AssemblyName>
     <FileUpgradeFlags>40</FileUpgradeFlags>
-    <UpgradeBackupLocation>D:\Projects\Town Crier\Town-Crier\Backup1\</UpgradeBackupLocation>
-    <OldToolsVersion>Current</OldToolsVersion>
+    <UpgradeBackupLocation>D:\Projects\Town Crier\Town-Crier\Backup\Town Crier\</UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Amazon.Core" Version="0.16.4" />
