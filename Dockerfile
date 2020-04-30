@@ -1,7 +1,7 @@
 FROM ubuntu
 
-RUN apt update 
-RUN apt-get install -y libssl1.1
+RUN apt-get update 
+RUN apt-get install -y curl
 
 WORKDIR /data
 COPY build /data
