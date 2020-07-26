@@ -34,15 +34,6 @@ namespace TownCrier
 		public async Task MainAsync()
 		{
 			Console.WriteLine("STARTING");
-            try
-            {
-				var guild = _client.GetGuild(334933825383563266);
-				await guild.GetTextChannel(377248661341470720).SendMessageAsync("Town Crier is back online!");
-			}
-			catch (Exception ex)
-            {
-				Console.WriteLine("Error: ", ex.Message);
-            }
 			Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "Data"));
 			_client = new DiscordSocketClient();
 			_config = BuildConfig();
