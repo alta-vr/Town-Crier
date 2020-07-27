@@ -1,12 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>Town_Crier</RootNamespace>
     <AssemblyName>Town-Crier</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Amazon.Core" Version="0.16.4" />
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.105.25" />
@@ -31,7 +34,6 @@
     <PackageReference Include="RestSharp" Version="106.6.10" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.5.0" />
   </ItemGroup>
-
   <ItemGroup>
     <Reference Include="AltaLogging">
       <HintPath>..\AltaDLLs\AltaLogging.dll</HintPath>
@@ -43,11 +45,9 @@
       <HintPath>..\AltaDLLs\WebApiModels.dll</HintPath>
     </Reference>
   </ItemGroup>
-
   <ItemGroup>
     <None Update="config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
 </Project>

@@ -35,7 +35,7 @@ namespace TownCrier.Services
 		public AcceptInviteService(AltaAPI altaApi, TimerService timer)
 		{
 			AltaApi = altaApi;
-
+			
 			timer.OnClockInterval += AcceptAll;
 
 			Client = new HttpClient();
@@ -48,9 +48,10 @@ namespace TownCrier.Services
 
 			altaApi.EnsureLoggedIn().Wait();
 
-			Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AltaApi.ApiClient.UserCredentials.AccessToken.Write());
+			Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AltaApi.ApiClient.UserCredentials.AccessToken.Write());	
 
 			AcceptAll(null, null);
+
 		}
 
 		async void AcceptAll(object sender, IServiceProvider serviceProvider)
@@ -59,7 +60,7 @@ namespace TownCrier.Services
 
 			try
 			{
-				HttpResponseMessage response = await Client.GetAsync("groups/invites");
+				HttpResponseMessage response = await Client.GetAsync($"{Client.BaseAddress.AbsoluteUri}groups/invites");
 
 				string content = await response.Content.ReadAsStringAsync();
 
@@ -70,7 +71,7 @@ namespace TownCrier.Services
 					for (int i = 0; i < invites.Length; i++)
 					{
 						Console.WriteLine("Accept " + invites[i].id);
-						await Client.PostAsync("groups/invites/" + invites[i].id, null);
+						await Client.PostAsync($"{Client.BaseAddress.AbsoluteUri}groups/invites/" + invites[i].id, null);
 					}
 				}
 				else

@@ -127,6 +127,8 @@ namespace TownCrier
 				.AddSingleton<PointCounter>()
 				.AddSingleton<DoYouCare>()
 				.AddSingleton<OutOfOffice>()
+				.AddSingleton<ContributorsList>()
+				.AddSingleton<AmIRight>()
 				.AddSingleton<GettingStartedService>()
 				.AddSingleton<ActivityRoleService>()
 				.AddSingleton<UserJoinManagement>()
