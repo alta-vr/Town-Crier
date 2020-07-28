@@ -51,15 +51,7 @@ namespace TownCrier
 				SocketTextChannel logChannel = discordGuild.GetTextChannel(botlogchannel);
 
 				await logChannel.SendMessageAsync("Town Crier has Restarted");
-			}
-
-			try
-			{
 				await discordGuild.GetTextChannel(377248661341470720).SendMessageAsync("Town Crier is back online!");
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine("Error: ", ex.Message);
 			}
 
 			Console.WriteLine(discordGuild.Name + " is ready");
