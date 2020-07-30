@@ -73,7 +73,7 @@ namespace DiscordBot.Modules
 				response += new string('ㅤ', progresses[i]) +
 					emojis[i] +
 					new string('ㅤ', 50 - progresses[i]) +
-					"||\n";
+					"\\|\\|\n";
 			}
 
 			return response;
