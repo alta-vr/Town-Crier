@@ -44,7 +44,7 @@ namespace TownCrier.Services
 		{
 			if (command.IsSpecified)
 			{
-				Console.WriteLine("User: {0} Executed Command: {1} {2} in channel: {3}", context.User, command.Value.Name, command.Value.Module.Name, context.Channel);
+				Console.WriteLine("User: {0} Executed Command: {1} {2} in channel: {3}", context.User, command.Value.Module.Name, command.Value.Name, context.Channel);
 			}
 			else
 			{
@@ -89,18 +89,24 @@ namespace TownCrier.Services
 
 		public async Task OnMessageUpdated(Cacheable<IMessage, ulong> _OldMsg, SocketMessage NewMsg, ISocketMessageChannel Channel)
 		{
-			var OldMsg = await _OldMsg.DownloadAsync();
-			if (OldMsg.Source != MessageSource.User) return;
-
-
-			if (cache.TryGetValue(NewMsg.Id, out var CacheMsg))
+			try
 			{
-				var reply = await Channel.GetMessageAsync(CacheMsg.First());
-				await reply.DeleteAsync();
-			}
-			await MessageReceived(NewMsg);
-		}
+				var OldMsg = await _OldMsg.DownloadAsync();
+				if (OldMsg.Source != MessageSource.User) return;
 
+
+				if (cache.TryGetValue(NewMsg.Id, out var CacheMsg))
+				{
+					var reply = await Channel.GetMessageAsync(CacheMsg.First());
+					await reply.DeleteAsync();
+				}
+				await MessageReceived(NewMsg);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine("Failed handling updated message");
+			}
+		}
 
 		public async Task OnReactAdded(Cacheable<IUserMessage, ulong> _msg, ISocketMessageChannel channel, SocketReaction reaction)
 		{
