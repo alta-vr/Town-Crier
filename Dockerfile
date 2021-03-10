@@ -1,7 +1,7 @@
-FROM ccc6e87d482b
+FROM ubuntu:latest
 
-RUN rm -rf /var/lib/apt/lists/* && apt-get clean && apt-get update
-RUN apt-get install openssl1.0 curl -y
+RUN apt-get update 
+RUN apt-get install -y curl
 
 WORKDIR /data
 COPY build /data

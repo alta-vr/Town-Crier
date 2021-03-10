@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>Town_Crier</RootNamespace>
+    <AssemblyName>Town-Crier</AssemblyName>
+    <FileUpgradeFlags>40</FileUpgradeFlags>
+    <UpgradeBackupLocation>D:\Projects\Town Crier\Town-Crier\Backup1\</UpgradeBackupLocation>
+    <OldToolsVersion>Current</OldToolsVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Amazon.Core" Version="0.16.4" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.105.25" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.101" />
+    <PackageReference Include="Discord.Addons.CommandCache" Version="2.1.0" />
+    <PackageReference Include="Discord.Addons.Interactive" Version="1.0.1" />
+    <PackageReference Include="Discord.Net" Version="2.1.1" />
+    <PackageReference Include="Discord.Net.Commands" Version="2.1.1" />
+    <PackageReference Include="Discord.Net.Core" Version="2.1.1" />
+    <PackageReference Include="Discord.Net.Rest" Version="2.1.1" />
+    <PackageReference Include="Discord.Net.Rpc" Version="1.0.2" />
+    <PackageReference Include="Discord.Net.Webhook" Version="2.1.1" />
+    <PackageReference Include="Discord.Net.WebSocket" Version="2.1.1" />
+    <PackageReference Include="Jira.SDK" Version="1.2.25" />
+    <PackageReference Include="LiteDB" Version="5.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="RestSharp" Version="106.6.10" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="AltaLogging">
+      <HintPath>..\AltaDLLs\AltaLogging.dll</HintPath>
+    </Reference>
+    <Reference Include="WebApiClient">
+      <HintPath>..\AltaDLLs\WebApiClient.dll</HintPath>
+    </Reference>
+    <Reference Include="WebApiModels">
+      <HintPath>..\AltaDLLs\WebApiModels.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
