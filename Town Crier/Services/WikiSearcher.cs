@@ -96,7 +96,7 @@ namespace TownCrier.Services
 		{
 			string url = guild.WikiUrl;
 
-			if (url == null)
+			if (url == null || message.Content.Contains('`'))
 			{
 				return;
 			}
