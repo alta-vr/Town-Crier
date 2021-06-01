@@ -3,7 +3,6 @@ kind: Pod
 metadata:
   name: "town-crier"
 spec:
-  hostNetwork: true
   restartPolicy: Always
   containers:
     - name: town-crier
