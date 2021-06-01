@@ -22,7 +22,7 @@ namespace TownCrier.Services
 
 		public async Task Process(SocketMessage message)
 		{
-			if (message.MentionedRoles.Count == 0)
+			if (message.MentionedRoles.Count == 0 || message.Author.Id == discord.CurrentUser.Id)
 			{
 				return;
 			}
@@ -45,7 +45,7 @@ namespace TownCrier.Services
 				.Where(x => x.Channel != channel.Id)
 				.Where(x => message.MentionedRoles.Any(role => role.Id == x.Role)))
 			{
-				ITextChannel targetChannel = await channel.Guild.GetTextChannelAsync(crossAlert.Channel);
+				ITextChannel targetChannel = (ITextChannel)discord.GetChannel(crossAlert.Channel);
 
 				IUserMessage response = await targetChannel.SendMessageAsync(message.Author.Mention + " in " + channel.Mention + ": " + message.Content + "\n" + message.GetJumpUrl() );
 
