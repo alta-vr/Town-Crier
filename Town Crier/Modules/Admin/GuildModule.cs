@@ -342,6 +342,8 @@ namespace TownCrier.Modules.Admin
 					return true;
 				}
 
+				message.Channel.SendMessageAsync(message.Content + " is not valid");
+
 				value = 0;
 				return false;
 			});
