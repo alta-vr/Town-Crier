@@ -337,6 +337,11 @@ namespace TownCrier.Modules.Admin
 					return true;
 				}
 
+				if (ulong.TryParse(message.Content, out value))
+				{
+					return true;
+				}
+
 				value = 0;
 				return false;
 			});
