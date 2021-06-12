@@ -55,15 +55,20 @@ namespace TownCrier.Modules
 	{
 		public TownDatabase Database { get; set;  }
 
-		[Command("blog")]
-		public Task Info()
+		[Command("website"), Alias("web", "site")]
+		public Task Website()
 			=> ReplyAsync(
-				$"Were you looking for this?\nhttps://www.townshiptale.com/blog/\n");
+				$"Were you looking for this?\nhttps://townshiptale.com/\n");
+
+		[Command("blog"), Alias("news")]
+		public Task Blog()
+			=> ReplyAsync(
+				$"Were you looking for this?\nhttps://townshiptale.com/news/\n");
 
 		[Command("wiki")]
 		public Task Wiki()
 			=> ReplyAsync(
-				$"Were you looking for this?\nhttps://www.townshiptale.com/wiki/\n");
+				$"Were you looking for this?\nhttps://townshiptale.fandom.com/wiki/A_Township_Tale_Wiki/\n");
 
 		[Command("invite")]
 		public Task Invite()
@@ -75,10 +80,25 @@ namespace TownCrier.Modules
 			=> ReplyAsync(
 				$"Were you looking for this?\nhttps://reddit.com/r/townshiptale\n");
 
-		[Command("resetpassword")]
+		[Command("twitter")]
+		public Task Twitter()
+			=> ReplyAsync(
+				$"Were you looking for this?\nhttps://twitter.com/townshiptale\n");
+
+		[Command("instagram"), Alias("insta")]
+		public Task Instagram()
+			=> ReplyAsync(
+				$"Were you looking for this?\nhttps://www.instagram.com/townshiptale/\n");
+
+		[Command("reset-password")]
 		public Task ResetPassword()
 			=> ReplyAsync(
 				$"Were you looking for this?\nhttps://townshiptale.com/reset-password\n");
+
+		[Command("download")]
+		public Task Download()
+			=> ReplyAsync(
+				$"Were you looking for this?\nhttps://townshiptale.com/download\n");
 
 		[Command("launcher")]
 		public Task Launcher()
@@ -89,6 +109,11 @@ namespace TownCrier.Modules
 		public Task Feedback()
 			=> ReplyAsync(
 				$"Were you looking for this?\nhttps://feedback.townshiptale.com\n");
+
+		[Command("store")]
+		public Task Store()
+			=> ReplyAsync(
+				$"Check out the store in game, or in the Alta Launcher:\n<alta://game/1/shop>\n");
 
 		class TechSupportSearch
 		{
@@ -126,7 +151,7 @@ namespace TownCrier.Modules
 			public Result[] results;
 		}
 
-		[Command("techsupport"), Alias("tech")]
+		[Command("tech-support"), Alias("tech")]
 		public async Task TechSupport([Remainder]string search = null)
 		{
 			if (string.IsNullOrEmpty(search))
@@ -172,15 +197,19 @@ namespace TownCrier.Modules
 		[Command("supporter"), Alias("support", "donate")]
 		public Task Supporter()
 			=> ReplyAsync(
-				"To become a supporter, visit the following URL, or click the 'Become a Supporter' button in the Alta Launcher.\nhttps://townshiptale.com/supporter");
+				"To become a supporter, visit the supporter page on the website:\nhttps://townshiptale.com/supporter\nOr in the launcher:\n<alta://game/1/supporter>");
 
 		[Command("meta")]
 		public Task Meta()
-			=> ReplyAsync("Join the meta discord here!\nhttps://discord.gg/GNpmEN2");
+			=> ReplyAsync("Were you looking for this?\nhttps://discord.gg/GNpmEN2");
+
+		[Command("github")]
+		public Task Github()
+			=> ReplyAsync("Were you looking for this?\nhttp://github.com/alta-vr");
 
 		[Command("dashboard"), Alias("dash")]
 		public Task Dashboard()
-			=> ReplyAsync("Use the dashboard here!\nhttp://dashboard.townshiptale.com");
+			=> ReplyAsync("Use the dashboard here:\nhttp://dash.townshiptale.com\n\nOr the old dashboard here:\nhttp://dashboard.townshiptale.com");
 
 		class TrelloCard
 		{
@@ -269,19 +298,6 @@ namespace TownCrier.Modules
 		}
 
 
-		[Command("title"), Alias("heading", "header")]
-		public async Task Title([Remainder]string text)
-		{
-			IUserMessage response = await ReplyAsync("\\```css\n" + text + "\n\\```");
-			await Context.Message.DeleteAsync();
-
-			Task _ = Task.Run(async () =>
-			{
-				await Task.Delay(20000);
-				await response.DeleteAsync();
-			});
-		}
-
 		[Command("userlist")]
 		public async Task UserList()
 		{
@@ -333,42 +349,6 @@ namespace TownCrier.Modules
 			System.IO.File.WriteAllText("D:/Output/Join Dates.txt", result.ToString());
 
 			await ReplyAsync("I'm done now :)");
-		}
-
-		[Command("alerton")]
-		public async Task AlertOn()
-		{
-			if (Context.Guild == null)
-			{
-				return;
-			}
-
-			if (!(Context.User as IGuildUser).RoleIds.Contains<ulong>(334935631149137920))
-			{
-				return;
-			}
-
-			IRole role = Context.Guild.Roles.FirstOrDefault(test => test.Name == "followers");
-
-			await role.ModifyAsync(properties => properties.Mentionable = true);
-		}
-
-		[Command("alertoff")]
-		public async Task AlertOff()
-		{
-			if (Context.Guild == null)
-			{
-				return;
-			}
-
-			if (!(Context.User as IGuildUser).RoleIds.Contains<ulong>(334935631149137920))
-			{
-				return;
-			}
-
-			IRole role = Context.Guild.Roles.FirstOrDefault(test => test.Name == "followers");
-
-			await role.ModifyAsync(properties => properties.Mentionable = false);
 		}
 
 		[Command("follow"), Alias("optin", "keepmeposted")]

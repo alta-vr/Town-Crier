@@ -93,7 +93,7 @@ namespace DiscordBot.Modules
 								new EmbedFieldBuilder().WithName("Facebook").WithValue("https://www.facebook.com/townshiptale").WithIsInline(true),
 								new EmbedFieldBuilder().WithName("Twitter").WithValue("https://twitter.com/townshiptale").WithIsInline(true),
 								new EmbedFieldBuilder().WithName("Discord").WithValue("https://discord.gg/townshiptale").WithIsInline(true));
-		});
+						});
 		}
 
 		static Embed GetEmbed(string title, string message, string url, bool isAppendingUrl, Color color)
