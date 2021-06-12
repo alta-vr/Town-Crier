@@ -7,6 +7,11 @@ spec:
   containers:
     - name: town-crier
       image: gcr.io/a-township-tale-servers/town-crier:latest
+      resources:
+        limits:
+          memory: "1000Mi"
+        requests:
+          memory: "500Mi"
       tty: true
       stdin: true
       command: ["/data/Town-Crier"]
