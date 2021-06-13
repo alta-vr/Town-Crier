@@ -68,6 +68,7 @@ namespace DiscordBot.Modules
 			yield return GetEmbed("Can I support the game?",
 						"There are many ways you can support the game! Here’s our top 6.\n" + 
 						"- Being active in the community\n" +
+						"- Telling your friends about the game\n" +
 						"- Contributing to community efforts such as the [wiki](https://townshiptale.fandom.com/wiki/A_Township_Tale_Wiki)\n" +
 						"- [Providing feedback and reporting bugs](https://feedback.townshiptale.com)\n" +
 						"- Purchasing cosmetics (in game or in the launcher)\n" +
