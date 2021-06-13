@@ -70,7 +70,7 @@ namespace DiscordBot.Modules
 						"- Being active in the community\n" +
 						"- Contributing to community efforts such as the [wiki](https://townshiptale.fandom.com/wiki/A_Township_Tale_Wiki)\n" +
 						"- [Providing feedback and reporting bugs](https://feedback.townshiptale.com)\n" +
-						"- Purchasing cosmetics (in game or in the [launcher](alta://game/1/shop)\n" +
+						"- Purchasing cosmetics (in game or in the launcher)\n" +
 						"- Becoming a [Supporter](https://townshiptale.com/supporter)",
 						"",
 						false,
@@ -85,6 +85,7 @@ namespace DiscordBot.Modules
 						{
 							builder.WithFields(
 								new EmbedFieldBuilder().WithName("Quest Store").WithValue("https://www.oculus.com/experiences/quest/2913958855307200").WithIsInline(true),
+								new EmbedFieldBuilder().WithName("Tech Support").WithValue("http://tech-support.townshiptale.com/").WithIsInline(true),
 								new EmbedFieldBuilder().WithName("Feedback").WithValue("https://feedback.townshiptale.com").WithIsInline(true),
 								new EmbedFieldBuilder().WithName("FAQ").WithValue("https://trello.com/b/Dnaxu0Mk/a-township-tale-faq-help").WithIsInline(true),
 								new EmbedFieldBuilder().WithName("Roadmap").WithValue("https://trello.com/b/0rQGM8l4/a-township-tales-roadmap").WithIsInline(true),
