@@ -207,6 +207,10 @@ namespace TownCrier.Modules
 		public Task Github()
 			=> ReplyAsync("Were you looking for this?\nhttp://github.com/alta-vr");
 
+		[Command("quest")]
+		public Task Quest()
+			=> ReplyAsync("Coming July 15th. Wishlist now!\nhttps://www.oculus.com/experiences/quest/2913958855307200");
+
 		[Command("dashboard"), Alias("dash")]
 		public Task Dashboard()
 			=> ReplyAsync("Use the dashboard here:\nhttp://dash.townshiptale.com\n\nOr the old dashboard here:\nhttp://dashboard.townshiptale.com");
