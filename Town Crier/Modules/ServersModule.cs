@@ -83,9 +83,13 @@ namespace TownCrier.Modules
 
 			int total = servers.Sum(item => item.OnlinePlayers.Count());
 
-			builder.AddField("Total Players", total, false);
+			builder.AddField("Totals", "");
+			builder.AddField("Servers", servers.Count(), false);
+			builder.AddField("Players", total, false);
 
-			await ReplyAsync("Can't see your server? Invite me (`Town Crier`) to your group!", embed: builder.Build());
+			builder.AddField("Note", "I am not part of every server!", false);
+
+			await ReplyAsync("These are the online server's that I (`Town Crier`) am invited to!", embed: builder.Build());
 		}
 
 		[Command("info"), Alias("player", "p", "i", "players")]
@@ -134,6 +138,7 @@ namespace TownCrier.Modules
 					return;
 				}
 			}
+
 			string[] lines = response.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 			string message = "";
 			for (int i = 0; i < lines.Length; i++)
