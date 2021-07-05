@@ -501,71 +501,75 @@ namespace TownCrier
 			}
 		}
 
-		//[Command("Verify")]
-		//public async Task Verify([Remainder]string encoded)
-		//{
-		//	JwtSecurityToken token;
-		//	Claim userData;
-		//	Claim altaId;
+		[Command("Verify")]
+		public async Task Verify([Remainder] string encoded)
+		{
+			await Context.Message.DeleteAsync();
 
-		//	TownUser user = Database.GetUser(Context.User);
+			await IsLinked();
+		}
+			//	JwtSecurityToken token;
+			//	Claim userData;
+			//	Claim altaId;
 
-		//	try
-		//	{
-		//		token = new JwtSecurityToken(encoded);
+			//	TownUser user = Database.GetUser(Context.User);
 
-		//		userData = token.Claims.FirstOrDefault(item => item.Type == "user_data");
-		//		altaId = token.Claims.FirstOrDefault(item => item.Type == "UserId");
-		//	}
-		//	catch
-		//	{
-		//		await ReplyAsync(Context.User.Mention + ", " + "Invalid verification token.");
-		//		await Context.Message.DeleteAsync();
-		//		return;
-		//	}
+			//	try
+			//	{
+			//		token = new JwtSecurityToken(encoded);
 
-		//	if (userData == null || altaId == null)
-		//	{
-		//		await ReplyAsync(Context.User.Mention + ", " + "Invalid verification token.");
-		//		await Context.Message.DeleteAsync();
-		//	}
-		//	else
-		//	{
-		//		try
-		//		{
-		//			VerifyData result = JsonConvert.DeserializeObject<VerifyData>(userData.Value);
+			//		userData = token.Claims.FirstOrDefault(item => item.Type == "user_data");
+			//		altaId = token.Claims.FirstOrDefault(item => item.Type == "UserId");
+			//	}
+			//	catch
+			//	{
+			//		await ReplyAsync(Context.User.Mention + ", " + "Invalid verification token.");
+			//		await Context.Message.DeleteAsync();
+			//		return;
+			//	}
 
-		//			string test = result.discord.ToLower();
-		//			string expected = Context.User.Username.ToLower() + "#" + Context.User.Discriminator;
-		//			string alternate = Context.User.Username.ToLower() + " #" + Context.User.Discriminator;
+			//	if (userData == null || altaId == null)
+			//	{
+			//		await ReplyAsync(Context.User.Mention + ", " + "Invalid verification token.");
+			//		await Context.Message.DeleteAsync();
+			//	}
+			//	else
+			//	{
+			//		try
+			//		{
+			//			VerifyData result = JsonConvert.DeserializeObject<VerifyData>(userData.Value);
+
+			//			string test = result.discord.ToLower();
+			//			string expected = Context.User.Username.ToLower() + "#" + Context.User.Discriminator;
+			//			string alternate = Context.User.Username.ToLower() + " #" + Context.User.Discriminator;
 
 
-		//			if (test != expected.ToLower() && test != alternate.ToLower())
-		//			{
-		//				await ReplyAsync(Context.User.Mention + ", " + "Make sure you correctly entered your account info! You entered: " + result.discord + ". Expected: " + expected);
-		//				await Context.Message.DeleteAsync();
-		//				return;
-		//			}
+			//			if (test != expected.ToLower() && test != alternate.ToLower())
+			//			{
+			//				await ReplyAsync(Context.User.Mention + ", " + "Make sure you correctly entered your account info! You entered: " + result.discord + ". Expected: " + expected);
+			//				await Context.Message.DeleteAsync();
+			//				return;
+			//			}
 
-		//			int id = int.Parse(altaId.Value);
+			//			int id = int.Parse(altaId.Value);
 
-		//			bool isValid = await AltaApi.ApiClient.ServicesClient.IsValidShortLivedIdentityTokenAsync(token);
+			//			bool isValid = await AltaApi.ApiClient.ServicesClient.IsValidShortLivedIdentityTokenAsync(token);
 
-		//			if (isValid)
-		//			{
-		//				await Link(Context.User, user, id, encoded);
-		//			}
-		//			else
-		//			{
-		//				await ReplyAsync(Context.User.Mention + ", " + "Invalid token! Try creating a new one!");
-		//				await Context.Message.DeleteAsync();
-		//			}
-		//		}
-		//		catch (Exception e)
-		//		{
-		//			await ReplyAsync(Context.User.Mention + ", " + "Invalid verification token : " + e.Message);
-		//		}
-		//	}
-		//}
-	}
+			//			if (isValid)
+			//			{
+			//				await Link(Context.User, user, id, encoded);
+			//			}
+			//			else
+			//			{
+			//				await ReplyAsync(Context.User.Mention + ", " + "Invalid token! Try creating a new one!");
+			//				await Context.Message.DeleteAsync();
+			//			}
+			//		}
+			//		catch (Exception e)
+			//		{
+			//			await ReplyAsync(Context.User.Mention + ", " + "Invalid verification token : " + e.Message);
+			//		}
+			//	}
+			//}
+		}
 }
