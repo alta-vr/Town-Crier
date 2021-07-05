@@ -332,17 +332,23 @@ namespace TownCrier.Services
                     IndexName = "linked_id-index"
                 };
 
-                var items = await dynamo.QueryAsync<DiscordAccount>(config).GetNextSetAsync();
-                DiscordAccount account = items.FirstOrDefault();
+                var table = dynamo.GetTargetTable<DiscordAccount>();
 
-                if (account == null)
+                var search = table.Query(config);
+
+                var items = await search.GetNextSetAsync();
+                Document document = items.FirstOrDefault();
+
+                if (document == null)
                 {
                     return -1;
                 }
 
+                var account = dynamo.FromDocument<DiscordAccount>(document);
+
                 return account.UserId;
             }
-            catch (ItemNotFoundException e)
+            catch 
             {
                 return -1;
             }
