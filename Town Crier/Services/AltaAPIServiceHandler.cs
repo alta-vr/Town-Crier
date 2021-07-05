@@ -16,17 +16,11 @@ namespace TownCrier.Services
 
         public IHighLevelApiClient ApiClient { get; set; }
 
-        TownDatabase database;
         
-        readonly TimerService timer;
-
         SHA512 sha512 = new SHA512Managed();
 
-        public AltaAPI(TownDatabase database, TimerService timer)
+        public AltaAPI()
         {
-            this.database = database;
-            this.timer = timer;
-
             StartWithEndpoint(HighLevelApiClientFactory.ProductionEndpoint);
 
             EnsureLoggedIn().Wait();

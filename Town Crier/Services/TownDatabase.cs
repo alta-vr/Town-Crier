@@ -256,9 +256,11 @@ namespace TownCrier.Services
         //    Users = new DynamoTableAccess<TownUser>(dynamo);
         //}
 
-        public TownDatabase(IAmazonDynamoDB dbContext)
+        public TownDatabase(AltaAPI altaApi, IAmazonDynamoDB dbContext)
         {
             Console.WriteLine("Running DDB!");
+            
+            this.AltaApi = altaApi;
 
             dynamo = new DynamoDBContext(dbContext);
 
@@ -270,6 +272,7 @@ namespace TownCrier.Services
         {
             Console.WriteLine("Running LiteDB!");
             this.database = database;
+            this.AltaApi = altaApi;
 
             Guilds = new LiteDBTableAccess<TownGuild>(altaApi, database, "Guilds");
             Users = new LiteDBTableAccess<TownUser>(altaApi, database, "Users");
