@@ -18,7 +18,7 @@ namespace TownCrier
 	[Group("account")]
 	public class AccountModule : InteractiveBase<SocketCommandContext>
 	{
-		public const string LinkUrl = "https://discord.com/api/oauth2/authorize?client_id=403426544737058816&redirect_uri=https%3A%2F%2Faccounts.townshiptale.com%2Foauth2%2Fui%2Flink%2Fdiscord&response_type=code&scope=guilds%20guilds.join%20identify%20email%20connections";
+		public const string LinkUrl = "https://accounts.townshiptale.com/oauth2/ui/link/discord";
 		public AltaAPI AltaApi { get; set; }
 		public TownDatabase Database { get; set; }
 
