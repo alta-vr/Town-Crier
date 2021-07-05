@@ -21,7 +21,7 @@ namespace TownCrier
 		public AltaAPI AltaApi { get; set; }
 		public TownDatabase Database { get; set; }
 
-		public AccountService AccountService { get; set; }
+		//public AccountService AccountService { get; set; }
 
 		//public class AccountDatabase
 		//{
@@ -152,29 +152,35 @@ namespace TownCrier
 			await logChannel?.SendMessageAsync(finishedMessage);
 		}
 
-		[RequireUserPermission(GuildPermission.Administrator)]
-		[Command("test")]
-		public async Task Test()
-		{
-			await AccountService.SendGeneralMessage(Context.User as SocketGuildUser);
-		}
+		//[RequireUserPermission(GuildPermission.Administrator)]
+		//[Command("test")]
+		//public async Task Test()
+		//{
+		//	await AccountService.SendGeneralMessage(Context.User as SocketGuildUser);
+		//}
 
 		[Command]
 		public async Task AccountInfo()
 		{
 			TownUser user = Database.GetUser(Context.User);
 
-			if (user.AltaInfo == null || user.AltaInfo.Identifier == 0)
+			await Database.RefreshAltaUser(user);
+
+			if (user.AltaId <= 0)
 			{
 				await ReplyAsync("You have not linked your alta account. Go to the launcher to link your account");
 			}
 			else
 			{
-				var account = await AltaApi.ApiClient.ShopClient.Account.GetShopAccountInfo(user.AltaInfo.Identifier);
+				var altaUser = await AltaApi.ApiClient.UserClient.GetUserInfoAsync(user.AltaId);
 
-				var stats = await AltaApi.ApiClient.UserClient.GetUserStatisticsAsync(user.AltaInfo.Identifier);
+				var account = await AltaApi.ApiClient.ShopClient.Account.GetShopAccountInfo(user.AltaId);
 
-				await ReplyAsync($"In Game Username: {user.AltaInfo.Username}\nSupporter: {account.MemberStatus.IsSupporter}\nPlay Time: {stats.PlayTime.TotalHours:0.0} hours\nCreated Account: {stats.SignupTime.ToShortDateString()} ({(DateTime.UtcNow - stats.SignupTime).TotalDays:0} days ago) ");
+				var stats = await AltaApi.ApiClient.UserClient.GetUserStatisticsAsync(user.AltaId);
+
+
+
+				await ReplyAsync($"In Game Username: {altaUser.Username}\nSupporter: {account.MemberStatus.IsSupporter}\nPlay Time: {stats.PlayTime.TotalHours:0.0} hours\nCreated Account: {stats.SignupTime.ToShortDateString()} ({(DateTime.UtcNow - stats.SignupTime).TotalDays:0} days ago) ");
 			}
 		}
 
@@ -183,17 +189,21 @@ namespace TownCrier
 		{
 			TownUser user = Database.GetUser(Context.User);
 
-			if (user.AltaInfo == null || user.AltaInfo.Identifier == 0)
+			await Database.RefreshAltaUser(user);
+
+			if (user.AltaId <= 0)
 			{
 				await ReplyAsync("You have not linked your alta account. Go to the launcher to link your account");
 			}
 			else
 			{
-				var account = await AltaApi.ApiClient.ShopClient.Account.GetShopAccountInfo(user.AltaInfo.Identifier);
+				var altaUser = await AltaApi.ApiClient.UserClient.GetUserInfoAsync(user.AltaId);
 
-				var stats = await AltaApi.ApiClient.UserClient.GetUserStatisticsAsync(user.AltaInfo.Identifier);
+				var account = await AltaApi.ApiClient.ShopClient.Account.GetShopAccountInfo(user.AltaId);
 
-				await ReplyAsync($"In Game Username: {user.AltaInfo.Username}\nTalems: {account.ShardBalance}\nSupporter: {account.MemberStatus.IsSupporter}\nSupporter End: {account.MemberStatus.MemberEndDate}\nPlay Time: {stats.PlayTime.TotalHours:0.0} hours\nCreated Account: {stats.SignupTime.ToShortDateString()} ({(DateTime.UtcNow - stats.SignupTime).TotalDays:0} days ago) ");
+				var stats = await AltaApi.ApiClient.UserClient.GetUserStatisticsAsync(user.AltaId);
+
+				await ReplyAsync($"In Game Username: {altaUser.Username}\nTalems: {account.ShardBalance}\nSupporter: {account.MemberStatus.IsSupporter}\nSupporter End: {account.MemberStatus.MemberEndDate}\nPlay Time: {stats.PlayTime.TotalHours:0.0} hours\nCreated Account: {stats.SignupTime.ToShortDateString()} ({(DateTime.UtcNow - stats.SignupTime).TotalDays:0} days ago) ");
 			}
 		}
 
@@ -202,13 +212,15 @@ namespace TownCrier
 		{
 			TownUser user = Database.GetUser(Context.User);
 
-			if (user.AltaInfo == null || user.AltaInfo.Identifier == 0)
+			await Database.RefreshAltaUser(user);
+
+			if (user.AltaId <= 0)
 			{
 				await ReplyAsync("You have not linked your alta account. Go to the launcher to link your account");
 			}
 			else
 			{
-				var account = await AltaApi.ApiClient.ShopClient.Account.GetShopAccountInfo();
+				var account = await AltaApi.ApiClient.ShopClient.Account.GetShopAccountInfo(user.AltaId);
 
 				await ReplyAsync($"You have {account.ShardBalance} Talems");
 			}
@@ -278,7 +290,6 @@ namespace TownCrier
 			public string discord;
 		}
 
-		// NOTE: Both of these commands will be tied to a global clock that will periodically update all accounts every 15~30 mins.
 
 		[Command("who-reverse")]
 		[RequireUserPermission(GuildPermission.ManageGuild)]
@@ -286,9 +297,13 @@ namespace TownCrier
 		{
 			TownUser entry = Database.GetUser(user);
 
-			if (entry.AltaInfo != null)
+			await Database.RefreshAltaUser(entry);
+
+			if (entry.AltaId > 0)
 			{
-				await ReplyAsync(entry.Name + " is " + entry.AltaInfo.Username);
+				var altaUser = await AltaApi.ApiClient.UserClient.GetUserInfoAsync(entry.AltaId);
+
+				await ReplyAsync(entry.Name + " is " + altaUser.Username);
 			}
 			else
 			{
@@ -315,243 +330,242 @@ namespace TownCrier
 		}
 
 		[Command("link")]
-		[RequireUserPermission(GuildPermission.ManageGuild)]
-		public async Task Link(IUser user, int altaId)
+		public async Task Link()
 		{
-			TownUser entry = Database.GetUser(user);
-
-			await Link(user, entry, altaId, null);
-
-			await ReplyAsync("Done!");
+			await ReplyAsync("https://discord.com/api/oauth2/authorize?client_id=403426544737058816&redirect_uri=https%3A%2F%2Faccounts.townshiptale.com%2Foauth2%2Fui%2Flink%2Fdiscord&response_type=code&scope=guilds%20guilds.join%20identify%20email%20connections");
 		}
 
-		async Task Link(IUser discordUser, TownUser user, int altaId, string linkToken)
-		{
-			if (user.AltaInfo == null)
-			{
-				user.AltaInfo = new UserAltaInfo();
-			}
+		//async Task Link(IUser discordUser, TownUser user, int altaId, string linkToken)
+		//{
+		//	if (user.AltaInfo == null)
+		//	{
+		//		user.AltaInfo = new UserAltaInfo();
+		//	}
 
-			if (user.AltaInfo.Identifier == altaId)
-			{
-				await ReplyAsync(discordUser.Mention + ", " + "Already connected!");
-				await Context.Message.DeleteAsync();
+		//	if (user.AltaInfo.Identifier == altaId)
+		//	{
+		//		await ReplyAsync(discordUser.Mention + ", " + "Already connected!");
+		//		await Context.Message.DeleteAsync();
 
-				await AccountService.UpdateAsync(user, (SocketGuildUser)discordUser);
-				return;
-			}
+		//		await AccountService.UpdateAsync(user, (SocketGuildUser)discordUser);
+		//		return;
+		//	}
 
-			if (user.AltaInfo.Identifier != 0)
-			{
-				await ReplyAsync(discordUser.Mention + ", " + $"Unlinking your Discord from {user.AltaInfo.Username}...");
-				await Context.Message.DeleteAsync();
+		//	if (user.AltaInfo.Identifier != 0)
+		//	{
+		//		await ReplyAsync(discordUser.Mention + ", " + $"Unlinking your Discord from {user.AltaInfo.Username}...");
+		//		await Context.Message.DeleteAsync();
 
-				user.Unlink();
+		//		user.Unlink();
 
-				Database.Users.Update(user);
-			}
+		//		Database.Users.Update(user);
+		//	}
 
-			TownUser existing = Database.Users.FindByIndex(altaId, "alta_id-index", "AltaId");
+		//	TownUser existing = Database.Users.FindByIndex(altaId, "alta_id-index", "AltaId");
 
-			if (existing != null && existing.UserId != discordUser.Id)
-			{
-				var olddiscorduser = Context.Client.GetUser(existing.UserId);
+		//	if (existing != null && existing.UserId != discordUser.Id)
+		//	{
+		//		var olddiscorduser = Context.Client.GetUser(existing.UserId);
 
-				await ReplyAsync(discordUser.Mention + ", " + $"Unlinking your Alta account from {olddiscorduser?.Mention}...");
-				await Context.Message.DeleteAsync();
+		//		await ReplyAsync(discordUser.Mention + ", " + $"Unlinking your Alta account from {olddiscorduser?.Mention}...");
+		//		await Context.Message.DeleteAsync();
 
-				existing.Unlink();
+		//		existing.Unlink();
 
-				Database.Users.Update(existing);
-			}
+		//		Database.Users.Update(existing);
+		//	}
 
-			var userInfo = await AltaApi.ApiClient.UserClient.GetUserInfoAsync(altaId);
+		//	var userInfo = await AltaApi.ApiClient.UserClient.GetUserInfoAsync(altaId);
 
-			user.AltaId = altaId;
-			user.AltaInfo.Identifier = altaId;
-			user.AltaInfo.Username = userInfo.Username;
+		//	user.AltaId = altaId;
+		//	user.AltaInfo.Identifier = altaId;
+		//	user.AltaInfo.Username = userInfo.Username;
 
-			Database.Users.Update(user);
+		//	Database.Users.Update(user);
 
-			try
-			{
-				if (linkToken != null)
-				{
-					await AltaApi.ApiClient.Account.LinkDiscordAccount(linkToken, discordUser.Id);
-				}
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine("Failed linking to discord in the ATT Database");
-			}
+		//	try
+		//	{
+		//		if (linkToken != null)
+		//		{
+		//			await AltaApi.ApiClient.Account.LinkDiscordAccount(linkToken, discordUser.Id);
+		//		}
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		Console.WriteLine("Failed linking to discord in the ATT Database");
+		//	}
 
-			await ReplyAsync(Context.User.Mention + ", " + $"Successfully linked to your Alta account! Hey there {user.AltaInfo.Username}!");
-			await Context.Message.DeleteAsync();
+		//	await ReplyAsync(Context.User.Mention + ", " + $"Successfully linked to your Alta account! Hey there {user.AltaInfo.Username}!");
+		//	await Context.Message.DeleteAsync();
 
-			//await AccountService.UpdateAsync(user, (SocketGuildUser)discordUser);
-		}
+		//	//await AccountService.UpdateAsync(user, (SocketGuildUser)discordUser);
+		//}
 
-		[Command("listextra")]
-		[RequireUserPermission(GuildPermission.ManageGuild)]
-		public async Task ListExtra()
-		{
-			foreach (SocketGuildUser user in Context.Guild.GetRole(547202953505800233).Members)
-			{
-				TownUser entry = Database.GetUser(user);
+		//[Command("listextra")]
+		//[RequireUserPermission(GuildPermission.ManageGuild)]
+		//public async Task ListExtra()
+		//{
+		//	foreach (SocketGuildUser user in Context.Guild.GetRole(547202953505800233).Members)
+		//	{
+		//		TownUser entry = Database.GetUser(user);
 
-				if (entry.AltaInfo == null || !entry.AltaInfo.IsSupporter)
-				{
-					await ReplyAsync(user.Username + " " + (entry.AltaInfo == null));
-				}
-			}
+		//		if (entry.AltaInfo == null || !entry.AltaInfo.IsSupporter)
+		//		{
+		//			await ReplyAsync(user.Username + " " + (entry.AltaInfo == null));
+		//		}
+		//	}
 
-			await ReplyAsync("Done!");
-		}
+		//	await ReplyAsync("Done!");
+		//}
 
-		[Command("forceall")]
-		[RequireUserPermission(GuildPermission.ManageGuild)]
-		public async Task ForceAll()
-		{
-			await Context.Guild.DownloadUsersAsync();
+		//[Command("forceall")]
+		//[RequireUserPermission(GuildPermission.ManageGuild)]
+		//public async Task ForceAll()
+		//{
+		//	await Context.Guild.DownloadUsersAsync();
 
-			await ReplyAsync("Starting...");
-			await AccountService.UpdateAll(true);
-			await ReplyAsync("Done!");
-		}
+		//	await ReplyAsync("Starting...");
+		//	await AccountService.UpdateAll(true);
+		//	await ReplyAsync("Done!");
+		//}
 
-		[Command("update")]
-		public async Task Update()
-		{
-			TownUser entry = Database.GetUser(Context.User);
+		//[Command("update")]
+		//public async Task Update()
+		//{
+		//	TownUser entry = Database.GetUser(Context.User);
 
-			if (entry.AltaInfo != null)
-			{
-				await AccountService.UpdateAsync(entry, (SocketGuildUser)Context.User);
+		//	if (entry.AltaInfo != null)
+		//	{
+		//		await AccountService.UpdateAsync(entry, (SocketGuildUser)Context.User);
 
-				await ReplyAsync(Context.User.Mention + ", " + $"Hey {entry.AltaInfo.Username}, your account info has been updated!");
-			}
-			else
-			{
-				await ReplyAsync(Context.User.Mention + ", " + "You have not linked to an Alta account! To link, visit the 'Account Settings' page in the launcher.");
-			}
-		}
+		//		await ReplyAsync(Context.User.Mention + ", " + $"Hey {entry.AltaInfo.Username}, your account info has been updated!");
+		//	}
+		//	else
+		//	{
+		//		await ReplyAsync(Context.User.Mention + ", " + "You have not linked to an Alta account! To link, visit the 'Account Settings' page in the launcher.");
+		//	}
+		//}
 
-		[Command("forceupdate"), RequireUserPermission(Discord.GuildPermission.ManageGuild)]
-		public async Task Update(SocketUser user)
-		{
-			TownUser entry = Database.GetUser(user);
+		//[Command("forceupdate"), RequireUserPermission(Discord.GuildPermission.ManageGuild)]
+		//public async Task Update(SocketUser user)
+		//{
+		//	TownUser entry = Database.GetUser(user);
 
-			if (entry.AltaInfo != null)
-			{
-				await AccountService.UpdateAsync(entry, (SocketGuildUser)user);
+		//	if (entry.AltaInfo != null)
+		//	{
+		//		await AccountService.UpdateAsync(entry, (SocketGuildUser)user);
 
-				await ReplyAsync(Context.User.Mention + ", " + $"{entry.AltaInfo.Username}'s account info has been updated!");
-			}
-			else
-			{
-				await ReplyAsync(Context.User.Mention + ", " + user.Username + " have not linked to an Alta account!");
-			}
-		}
+		//		await ReplyAsync(Context.User.Mention + ", " + $"{entry.AltaInfo.Username}'s account info has been updated!");
+		//	}
+		//	else
+		//	{
+		//		await ReplyAsync(Context.User.Mention + ", " + user.Username + " have not linked to an Alta account!");
+		//	}
+		//}
 
-		[Command("unlink")]
-		public async Task Unlink()
-		{
-			var user = Database.GetUser(Context.User);
+		//[Command("unlink")]
+		//public async Task Unlink()
+		//{
+		//	var user = Database.GetUser(Context.User);
 
-			if (user.AltaInfo != null && user.AltaInfo.Identifier != 0)
-			{
-				user.Unlink();
+		//	if (user.AltaInfo != null && user.AltaInfo.Identifier != 0)
+		//	{
+		//		user.Unlink();
 
-				Database.Users.Update(user);
+		//		Database.Users.Update(user);
 
-				await ReplyAsync(Context.User.Mention + ", " + "You are no longer linked to an Alta account!");
-			}
-			else
-			{
-				await ReplyAsync(Context.User.Mention + ", " + "You have not linked to an Alta account! To link, visit the 'Account Settings' page in the launcher.");
-			}
-		}
+		//		await ReplyAsync(Context.User.Mention + ", " + "You are no longer linked to an Alta account!");
+		//	}
+		//	else
+		//	{
+		//		await ReplyAsync(Context.User.Mention + ", " + "You have not linked to an Alta account! To link, visit the 'Account Settings' page in the launcher.");
+		//	}
+		//}
 
 		[Command("IsLinked"), Alias("Linked")]
 		public async Task IsLinked()
 		{
 			TownUser user = Database.GetUser(Context.User);
 
-			if (user.AltaInfo == null || user.AltaInfo.Identifier == 0)
+			await Database.RefreshAltaUser(user);
+
+			if (user.AltaId <= 0)
 			{
-				await ReplyAsync(Context.User.Mention + ", " + "You have not linked to an Alta account! To link, visit the 'Account Settings' page in the launcher.");
+				await ReplyAsync(Context.User.Mention + ", " + "You have not linked to an Alta account! To link, visit https://discord.com/api/oauth2/authorize?client_id=403426544737058816&redirect_uri=https%3A%2F%2Faccounts.townshiptale.com%2Foauth2%2Fui%2Flink%2Fdiscord&response_type=code&scope=guilds%20guilds.join%20identify%20email%20connections");
 			}
 			else
 			{
-				await ReplyAsync(Context.User.Mention + ", " + $"Your account is currently linkedto " + user.AltaInfo.Username + "!");
+				var userInfo = await AltaApi.ApiClient.UserClient.GetUserInfoAsync(user.AltaId);
+
+				await ReplyAsync(Context.User.Mention + ", " + $"Your account is currently linkedto " + userInfo.Username + "!");
 			}
 		}
 
-		[Command("Verify")]
-		public async Task Verify([Remainder]string encoded)
-		{
-			JwtSecurityToken token;
-			Claim userData;
-			Claim altaId;
+		//[Command("Verify")]
+		//public async Task Verify([Remainder]string encoded)
+		//{
+		//	JwtSecurityToken token;
+		//	Claim userData;
+		//	Claim altaId;
 
-			TownUser user = Database.GetUser(Context.User);
+		//	TownUser user = Database.GetUser(Context.User);
 
-			try
-			{
-				token = new JwtSecurityToken(encoded);
+		//	try
+		//	{
+		//		token = new JwtSecurityToken(encoded);
 
-				userData = token.Claims.FirstOrDefault(item => item.Type == "user_data");
-				altaId = token.Claims.FirstOrDefault(item => item.Type == "UserId");
-			}
-			catch
-			{
-				await ReplyAsync(Context.User.Mention + ", " + "Invalid verification token.");
-				await Context.Message.DeleteAsync();
-				return;
-			}
+		//		userData = token.Claims.FirstOrDefault(item => item.Type == "user_data");
+		//		altaId = token.Claims.FirstOrDefault(item => item.Type == "UserId");
+		//	}
+		//	catch
+		//	{
+		//		await ReplyAsync(Context.User.Mention + ", " + "Invalid verification token.");
+		//		await Context.Message.DeleteAsync();
+		//		return;
+		//	}
 
-			if (userData == null || altaId == null)
-			{
-				await ReplyAsync(Context.User.Mention + ", " + "Invalid verification token.");
-				await Context.Message.DeleteAsync();
-			}
-			else
-			{
-				try
-				{
-					VerifyData result = JsonConvert.DeserializeObject<VerifyData>(userData.Value);
+		//	if (userData == null || altaId == null)
+		//	{
+		//		await ReplyAsync(Context.User.Mention + ", " + "Invalid verification token.");
+		//		await Context.Message.DeleteAsync();
+		//	}
+		//	else
+		//	{
+		//		try
+		//		{
+		//			VerifyData result = JsonConvert.DeserializeObject<VerifyData>(userData.Value);
 
-					string test = result.discord.ToLower();
-					string expected = Context.User.Username.ToLower() + "#" + Context.User.Discriminator;
-					string alternate = Context.User.Username.ToLower() + " #" + Context.User.Discriminator;
+		//			string test = result.discord.ToLower();
+		//			string expected = Context.User.Username.ToLower() + "#" + Context.User.Discriminator;
+		//			string alternate = Context.User.Username.ToLower() + " #" + Context.User.Discriminator;
 
 
-					if (test != expected.ToLower() && test != alternate.ToLower())
-					{
-						await ReplyAsync(Context.User.Mention + ", " + "Make sure you correctly entered your account info! You entered: " + result.discord + ". Expected: " + expected);
-						await Context.Message.DeleteAsync();
-						return;
-					}
+		//			if (test != expected.ToLower() && test != alternate.ToLower())
+		//			{
+		//				await ReplyAsync(Context.User.Mention + ", " + "Make sure you correctly entered your account info! You entered: " + result.discord + ". Expected: " + expected);
+		//				await Context.Message.DeleteAsync();
+		//				return;
+		//			}
 
-					int id = int.Parse(altaId.Value);
+		//			int id = int.Parse(altaId.Value);
 
-					bool isValid = await AltaApi.ApiClient.ServicesClient.IsValidShortLivedIdentityTokenAsync(token);
+		//			bool isValid = await AltaApi.ApiClient.ServicesClient.IsValidShortLivedIdentityTokenAsync(token);
 
-					if (isValid)
-					{
-						await Link(Context.User, user, id, encoded);
-					}
-					else
-					{
-						await ReplyAsync(Context.User.Mention + ", " + "Invalid token! Try creating a new one!");
-						await Context.Message.DeleteAsync();
-					}
-				}
-				catch (Exception e)
-				{
-					await ReplyAsync(Context.User.Mention + ", " + "Invalid verification token : " + e.Message);
-				}
-			}
-		}
+		//			if (isValid)
+		//			{
+		//				await Link(Context.User, user, id, encoded);
+		//			}
+		//			else
+		//			{
+		//				await ReplyAsync(Context.User.Mention + ", " + "Invalid token! Try creating a new one!");
+		//				await Context.Message.DeleteAsync();
+		//			}
+		//		}
+		//		catch (Exception e)
+		//		{
+		//			await ReplyAsync(Context.User.Mention + ", " + "Invalid verification token : " + e.Message);
+		//		}
+		//	}
+		//}
 	}
 }

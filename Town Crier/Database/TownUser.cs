@@ -18,11 +18,6 @@ namespace TownCrier.Database
 		[DynamoDBGlobalSecondaryIndexHashKey("alta_id-index", "alta_id")]
 		public int AltaId { get; set; }
 
-		[DynamoDBProperty("supporter_expiry_day")]
-		public DateTime? SupporterExpiryDay { get; set; }
-
-		[DynamoDBProperty("supporter_expiry")]
-		public DateTime? SupporterExpiry { get; set; }
 
 		[DynamoDBProperty("name")]
 		public string Name { get; set; }
@@ -39,30 +34,30 @@ namespace TownCrier.Database
 		[DynamoDBProperty("initial_join")]
 		public DateTime InitialJoin { get; set; }
 
-		[DynamoDBProperty("alta_info")]
-		public UserAltaInfo AltaInfo { get; set; }
+		//[DynamoDBProperty("alta_info")]
+		//public UserAltaInfo AltaInfo { get; set; }
 
 		[DynamoDBProperty("scoring")]
 		public UserScoring Scoring { get; set; }
 		
-		public void Unlink()
-		{
-			AltaId = 0;
-			AltaInfo = null;
-		}
+		//public void Unlink()
+		//{
+		//	AltaId = 0;
+		//	AltaInfo = null;
+		//}
 
-		public void UpdateAltaCredentials(UserInfo info)
-		{
-			AltaId = info.Identifier;
+		//public void UpdateAltaCredentials(UserInfo info)
+		//{
+		//	AltaId = info.Identifier;
 
-			if (AltaInfo == null)
-			{
-				AltaInfo = new UserAltaInfo();
-			}
+		//	if (AltaInfo == null)
+		//	{
+		//		AltaInfo = new UserAltaInfo();
+		//	}
 
-			AltaInfo.Identifier = info.Identifier;
-			AltaInfo.Username = info.Username;
-		}
+		//	AltaInfo.Identifier = info.Identifier;
+		//	AltaInfo.Username = info.Username;
+		//}
 	}
 
 	public class UserScoring
@@ -88,11 +83,6 @@ namespace TownCrier.Database
 		[DynamoDBProperty("identifier")]
 		public int Identifier { get; set; }
 
-		/// <summary>
-		/// Date of Expiration of their supporter status
-		/// </summary>
-		[DynamoDBProperty("supporter_expiry")]
-		public DateTime? SupporterExpiry { get; set; }
 
 		/// <summary>
 		/// Returns wether or not the user is currently a supporter.

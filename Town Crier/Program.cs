@@ -55,7 +55,7 @@ namespace TownCrier
 			services.GetRequiredService<ChannelFilters>();
 			services.GetRequiredService<ActivityRoleService>();
 			services.GetRequiredService<Migrator>();
-			services.GetRequiredService<AccountService>();
+			//services.GetRequiredService<AccountService>();
 			services.GetRequiredService<AcceptInviteService>();
 			services.GetRequiredService<RoutineAnnouncementService>();
 
@@ -117,7 +117,7 @@ namespace TownCrier
 				// Initializes AltaAPIService
 				.AddSingleton<AltaAPI>()
 				.AddSingleton<AltaProtocolService>()
-				.AddSingleton<AccountService>()
+				//.AddSingleton<AccountService>()
 				.AddSingleton<AcceptInviteService>()
 				// Initializes other functionality
 				.AddSingleton<ChannelFilters>()

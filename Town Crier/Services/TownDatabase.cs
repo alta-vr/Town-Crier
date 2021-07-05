@@ -1,4 +1,5 @@
 ﻿using Alta.WebApi.Models;
+using Alta.WebApi.Utility;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
@@ -11,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Town_Crier.Database;
 using TownCrier.Database;
 
 namespace TownCrier.Services
@@ -70,13 +72,17 @@ namespace TownCrier.Services
     {
         LiteDatabase Database { get; }
 
+        public AltaAPI AltaApi { get; }
+
         ILiteCollection<T> Table { get; }
 
         public string Name { get; }
 
-        public LiteDBTableAccess(LiteDatabase database, string name)
+        public LiteDBTableAccess(AltaAPI altaApi, LiteDatabase database, string name)
         {
             Name = name;
+
+            AltaApi = altaApi;
 
             Database = database;
 
@@ -230,23 +236,25 @@ namespace TownCrier.Services
         LiteDatabase database;
 
         DynamoDBContext dynamo;
+        public AltaAPI AltaApi { get; }
 
         public ITableAccess<TownGuild> Guilds { get; }
         public ITableAccess<TownUser> Users { get; }
 
-        public TownDatabase(IAmazonDynamoDB dbContext, LiteDatabase database)
-        {
-            this.database = database;
+        //public TownDatabase(AltaAPI altaApi, IAmazonDynamoDB dbContext, LiteDatabase database)
+        //{
+        //    this.database = database;
+        //    this.AltaApi = altaApi;
 
-            Guilds = new LiteDBTableAccess<TownGuild>(database, "Guilds");
-            Users = new LiteDBTableAccess<TownUser>(database, "Users");
+        //    Guilds = new LiteDBTableAccess<TownGuild>(altaApi, database, "Guilds");
+        //    Users = new LiteDBTableAccess<TownUser>(altaApi, database, "Users");
 
-            Console.WriteLine("Migrating to dynamo!");
-            Migrate(dbContext);
+        //    Console.WriteLine("Migrating to dynamo!");
+        //    Migrate(dbContext);
 
-            Guilds = new DynamoTableAccess<TownGuild>(dynamo);
-            Users = new DynamoTableAccess<TownUser>(dynamo);
-        }
+        //    Guilds = new DynamoTableAccess<TownGuild>(dynamo);
+        //    Users = new DynamoTableAccess<TownUser>(dynamo);
+        //}
 
         public TownDatabase(IAmazonDynamoDB dbContext)
         {
@@ -258,37 +266,33 @@ namespace TownCrier.Services
             Users = new DynamoTableAccess<TownUser>(dynamo);
         }
 
-        public TownDatabase(LiteDatabase database)
+        public TownDatabase(AltaAPI altaApi, LiteDatabase database)
         {
             Console.WriteLine("Running LiteDB!");
             this.database = database;
 
-            Guilds = new LiteDBTableAccess<TownGuild>(database, "Guilds");
-            Users = new LiteDBTableAccess<TownUser>(database, "Users");
+            Guilds = new LiteDBTableAccess<TownGuild>(altaApi, database, "Guilds");
+            Users = new LiteDBTableAccess<TownUser>(altaApi, database, "Users");
         }
 
-        void Migrate(IAmazonDynamoDB dbContext)
-        {
-            dynamo = new DynamoDBContext(dbContext);
+        //void Migrate(IAmazonDynamoDB dbContext)
+        //{
+        //    dynamo = new DynamoDBContext(dbContext);
 
-            var newGuilds = new DynamoTableAccess<TownGuild>(dynamo);
-            var newUsers = new DynamoTableAccess<TownUser>(dynamo);
+        //    var newGuilds = new DynamoTableAccess<TownGuild>(dynamo);
+        //    var newUsers = new DynamoTableAccess<TownUser>(dynamo);
 
-            Migrate(Guilds, newGuilds);
-            Migrate(Users, newUsers, FixUser);
-        }
+        //    Migrate(Guilds, newGuilds);
+        //    Migrate(Users, newUsers, FixUser);
+        //}
 
-        void FixUser(TownUser user)
-        {
-            if (user.AltaInfo != null)
-            {
-                user.AltaId = user.AltaInfo.Identifier;
-
-                user.SupporterExpiry = user.AltaInfo.SupporterExpiry;
-
-                user.SupporterExpiryDay = user.SupporterExpiry?.Date;
-            }
-        }
+        //void FixUser(TownUser user)
+        //{
+        //    if (user.AltaInfo != null)
+        //    {
+        //        user.AltaId = user.AltaInfo.Identifier;
+        //    }
+        //}
 
         void Migrate<T>(ITableAccess<T> from, ITableAccess<T> to, Action<T> modify = null)
         {
@@ -305,6 +309,52 @@ namespace TownCrier.Services
         public TownGuild GetGuild(IGuild guild)
         {
             return Guilds.FindById(guild.Id);
+        }
+
+        public async Task<int> GetUserId(string linkedIdentifier)
+        {
+            try
+            {
+                var queryFilter = new QueryFilter();
+
+                queryFilter.AddCondition("linked_id", QueryOperator.Equal, linkedIdentifier);
+                queryFilter.AddCondition("service", QueryOperator.Equal, Service.Discord.ToString());
+
+                var config = new QueryOperationConfig()
+                {
+                    Limit = 1,
+                    Filter = queryFilter,
+                    Select = SelectValues.AllProjectedAttributes,
+
+                    IndexName = "linked_id-index"
+                };
+
+                var items = await dynamo.QueryAsync<DiscordAccount>(config).GetNextSetAsync();
+                DiscordAccount account = items.FirstOrDefault();
+
+                if (account == null)
+                {
+                    return -1;
+                }
+
+                return account.UserId;
+            }
+            catch (ItemNotFoundException e)
+            {
+                return -1;
+            }
+        }
+
+        public async Task RefreshAltaUser(TownUser user)
+        {
+            int id = await GetUserId(user.UserId.ToString());
+
+            if (user.AltaId != id)
+			{
+                user.AltaId = id;
+
+                Users.Update(user);
+			}
         }
 
         public TownUser GetUser(IUser user)

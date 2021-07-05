@@ -38,13 +38,15 @@ namespace TownCrier.Modules
 		{
 			TownUser user = Database.GetUser(userArg);
 
-			if (user == null || user.AltaInfo == null || user.AltaInfo.Identifier == 0)
+			await Database.RefreshAltaUser(user);
+
+			if (user == null || user.AltaId <= 0)
 			{
-				await ReplyAsync(Context.User.Mention + ", " + "You have not linked to an Alta account! To link, visit the 'Account Settings' page in the launcher.");
+				await ReplyAsync(Context.User.Mention + ", " + "You have not linked to an Alta account!");
 			}
 			else
 			{
-				var stats = await AltaAPI.ApiClient.UserClient.GetUserStatisticsAsync(user.AltaInfo.Identifier);
+				var stats = await AltaAPI.ApiClient.UserClient.GetUserStatisticsAsync(user.AltaId);
 
 				await ReplyAsync("Play time: " + stats.PlayTime.TotalHours.ToString("0.00") + " hours");
 			}
