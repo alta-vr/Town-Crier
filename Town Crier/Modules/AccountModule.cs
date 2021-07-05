@@ -18,6 +18,7 @@ namespace TownCrier
 	[Group("account")]
 	public class AccountModule : InteractiveBase<SocketCommandContext>
 	{
+		public const string LinkUrl = "https://discord.com/api/oauth2/authorize?client_id=403426544737058816&redirect_uri=https%3A%2F%2Faccounts.townshiptale.com%2Foauth2%2Fui%2Flink%2Fdiscord&response_type=code&scope=guilds%20guilds.join%20identify%20email%20connections";
 		public AltaAPI AltaApi { get; set; }
 		public TownDatabase Database { get; set; }
 
@@ -168,7 +169,7 @@ namespace TownCrier
 
 			if (user.AltaId <= 0)
 			{
-				await ReplyAsync("You have not linked your alta account. Go to the launcher to link your account");
+				await ReplyAsync(Context.User.Mention + ", " + "You have not linked to an Alta account! To link, visit\n" + LinkUrl);
 			}
 			else
 			{
@@ -193,7 +194,7 @@ namespace TownCrier
 
 			if (user.AltaId <= 0)
 			{
-				await ReplyAsync("You have not linked your alta account. Go to the launcher to link your account");
+				await ReplyAsync(Context.User.Mention + ", " + "You have not linked to an Alta account! To link, visit\n" + LinkUrl);
 			}
 			else
 			{
@@ -216,7 +217,7 @@ namespace TownCrier
 
 			if (user.AltaId <= 0)
 			{
-				await ReplyAsync("You have not linked your alta account. Go to the launcher to link your account");
+				await ReplyAsync(Context.User.Mention + ", " + "You have not linked to an Alta account! To link, visit\n" + LinkUrl);
 			}
 			else
 			{
@@ -332,7 +333,7 @@ namespace TownCrier
 		[Command("link")]
 		public async Task Link()
 		{
-			await ReplyAsync("https://discord.com/api/oauth2/authorize?client_id=403426544737058816&redirect_uri=https%3A%2F%2Faccounts.townshiptale.com%2Foauth2%2Fui%2Flink%2Fdiscord&response_type=code&scope=guilds%20guilds.join%20identify%20email%20connections");
+			await ReplyAsync(LinkUrl);
 		}
 
 		//async Task Link(IUser discordUser, TownUser user, int altaId, string linkToken)
@@ -491,7 +492,7 @@ namespace TownCrier
 
 			if (user.AltaId <= 0)
 			{
-				await ReplyAsync(Context.User.Mention + ", " + "You have not linked to an Alta account! To link, visit https://discord.com/api/oauth2/authorize?client_id=403426544737058816&redirect_uri=https%3A%2F%2Faccounts.townshiptale.com%2Foauth2%2Fui%2Flink%2Fdiscord&response_type=code&scope=guilds%20guilds.join%20identify%20email%20connections");
+				await ReplyAsync(Context.User.Mention + ", " + "You have not linked to an Alta account! To link, visit\n" + LinkUrl);
 			}
 			else
 			{

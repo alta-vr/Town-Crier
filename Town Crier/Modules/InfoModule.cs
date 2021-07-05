@@ -107,6 +107,12 @@ namespace TownCrier.Modules
 			=> ReplyAsync(
 				$"Were you looking for this?\nhttps://townshiptale.com/launcher\n");
 
+
+		[Command("link")]
+		public Task Link()
+			=> ReplyAsync(
+				$"Were you looking for this?\n" + AccountModule.LinkUrl);
+
 		[Command("feedback"), Alias("bugs", "fbi", "ideas")]
 		public Task Feedback()
 			=> ReplyAsync(
