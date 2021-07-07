@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TownCrier;
 
 namespace DiscordBot.Modules
 {
@@ -43,14 +44,13 @@ namespace DiscordBot.Modules
 						"If you want to participate in the community, please read [#rules](https://discord.gg/Jpe9FH9) first.",
 						"https://discord.gg/Jpe9FH9",
 						false,
-						new Color(0xC9881E));
+						new Color(0x1D867D));
 
 			yield return GetEmbed("Downloading A Township Tale",
-						"A Township Tale is coming to standalone Quest on the 15th of July! You can wishlist the game here:\nhttps://www.oculus.com/experiences/quest/2913958855307200\n\n" +
-						"A Township Tale can be downloaded for PC via it's companion app, the Alta Launcher. You can download the launcher here:\nhttps://townshiptale.com/download",
+						"A Township Tale is available on both Quest and PC. You can get it here: \nhttps://townshiptale.com/download",
 						"https://townshiptale.com/download",
 						false,
-						new Color(0xC9881E),
+						new Color(0xE8A623),
 						builder =>
 						{
 							builder.WithImageUrl("https://i.imgur.com/AZpSLmC.png");
@@ -63,7 +63,7 @@ namespace DiscordBot.Modules
 						"You can also search for servers by tags in the Launcher. Click on the groups icon in the bar on the right.",
 						"",
 						false,
-						new Color(0xC9881E));
+						new Color(0xE8A623));
 
 			yield return GetEmbed("Can I support the game?",
 						"There are many ways you can support the game! Here’s our top 6.\n" + 
@@ -75,13 +75,20 @@ namespace DiscordBot.Modules
 						"- Becoming a [Supporter](https://townshiptale.com/supporter)",
 						"",
 						false,
-						new Color(0xC9881E));
+						new Color(0x76d6fd));
+
+			yield return GetEmbed("Link your A Township Tale account with Discord!",
+						"To link your account, visit " + AccountModule.LinkUrl, AccountModule.LinkUrl, false, new Color(0x7289da),
+						builder =>
+						{
+							builder.WithImageUrl("https://imgur.com/o49Qzvi");
+						});
 
 			yield return GetEmbed("Some useful links!",
 						"If you're interested in more information about the game, here are some good places to go!",
 						"",
 						false,
-						new Color(0xC9881E),
+						new Color(0x1D867D),
 						builder =>
 						{
 							builder.WithFields(
@@ -98,7 +105,7 @@ namespace DiscordBot.Modules
 						"",
 						"",
 						false,
-						new Color(0xC9881E),
+						new Color(0x1D867D),
 						builder =>
 						{
 							builder.WithFields(
