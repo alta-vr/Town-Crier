@@ -101,7 +101,7 @@ namespace DiscordBot.Modules
 			public async Task TownCrier() => await ReplyAsync("I'm the trustworthy Town Crier! Some may find me annoying, but I swear, I'm here to help!");
 
 			[Command("alta"), Alias("company", "team", "developer")]
-			public async Task Alta() => await ReplyAsync("Alta is a VR game development studio based in Sydney! We are (surprise, surprise) working on A Township Tale. The team consists of me (most importantly), and several others. You can see their names in orange or yellow.");
+			public async Task Alta() => await ReplyAsync("Alta is a VR game development studio based in Sydney! We are (surprise, surprise) working on A Township Tale. The team consists of me (most importantly), and several others. You can see their names in orange.");
 
 			static readonly string[] UnknownReplies = new string[]
 			{

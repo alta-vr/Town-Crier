@@ -29,11 +29,11 @@ namespace TownCrier
 
 		DiscordSocketClient _client;
 		IConfiguration _config;
+		readonly TownDatabase database;
 
 		public async Task MainAsync()
 		{
 			Console.WriteLine("STARTING");
-
 			Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "Data"));
 			_client = new DiscordSocketClient();
 			_config = BuildConfig();
