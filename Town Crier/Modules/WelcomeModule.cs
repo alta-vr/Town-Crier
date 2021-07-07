@@ -81,7 +81,7 @@ namespace DiscordBot.Modules
 						"To link your account, visit " + AccountModule.LinkUrl, AccountModule.LinkUrl, false, new Color(0x7289da),
 						builder =>
 						{
-							builder.WithImageUrl("https://imgur.com/o49Qzvi");
+							builder.WithImageUrl("https://i.imgur.com/o49Qzvi.png");
 						});
 
 			yield return GetEmbed("Some useful links!",
