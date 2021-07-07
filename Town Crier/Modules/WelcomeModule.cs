@@ -59,7 +59,8 @@ namespace DiscordBot.Modules
 			yield return GetEmbed("Finding a server",
 						"After completing the tutorial, you will need to find a server to play on!\n" +
 						"You can create a server yourself, play on a friends, or find one online.\n\n" +
-						"You can find some in [#community-servers](https://discord.gg/EB5wDhW).\n\n" +
+						"You can find some quest servers in [#communities-quest](https://discord.gg/5eqZ5KP3dG).\n" +
+						"You can find some pc servers in [#communities-pc](https://discord.gg/EB5wDhW).\n\n" +
 						"You can also search for servers by tags in the Launcher. Click on the groups icon in the bar on the right.",
 						"",
 						false,
