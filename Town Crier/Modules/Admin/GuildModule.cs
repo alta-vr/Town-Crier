@@ -23,22 +23,22 @@ namespace TownCrier.Modules.Admin
 		}
 	}
 
-	[Group("test"), RequireUserPermission(Discord.GuildPermission.ManageGuild)]
-	public class TestModule : InteractiveBase<SocketCommandContext>
-	{
-		public ActivityRoleService RoleService { get; }
+	//[Group("test"), RequireUserPermission(Discord.GuildPermission.ManageGuild)]
+	//public class TestModule : InteractiveBase<SocketCommandContext>
+	//{
+	//	public ActivityRoleService RoleService { get; }
 
-		public TestModule(ActivityRoleService roleService)
-		{
-			RoleService = roleService;
-		}
+	//	public TestModule(ActivityRoleService roleService)
+	//	{
+	//		RoleService = roleService;
+	//	}
 
-		[Command("role")]
-		public async Task Role(SocketGuildUser user)
-		{
-			RoleService.ForceUpdate(user);
-		}
-	}
+	//	[Command("role")]
+	//	public async Task Role(SocketGuildUser user)
+	//	{
+	//		RoleService.ForceUpdate(user);
+	//	}
+	//}
 
 	[Group("guild"), RequireUserPermission(Discord.GuildPermission.ManageGuild)]
 	public class GuildModule : InteractiveBase<SocketCommandContext>
