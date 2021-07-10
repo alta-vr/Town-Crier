@@ -48,12 +48,12 @@ namespace TownCrier
 			services.GetRequiredService<AltaProtocolService>();
 			services.GetRequiredService<DoYouCare>();
 			services.GetRequiredService<CrossAlerter>();
-			services.GetRequiredService<PointCounter>();
+			//services.GetRequiredService<PointCounter>();
 			services.GetRequiredService<ContributorsList>();
 			services.GetRequiredService<WikiSearcher>();
 			services.GetRequiredService<AmIRight>();
 			services.GetRequiredService<ChannelFilters>();
-			services.GetRequiredService<ActivityRoleService>();
+			//services.GetRequiredService<ActivityRoleService>();
 			services.GetRequiredService<Migrator>();
 			//services.GetRequiredService<AccountService>();
 			services.GetRequiredService<AcceptInviteService>();
@@ -124,13 +124,13 @@ namespace TownCrier
 				.AddSingleton<CrossAlerter>()
 				.AddSingleton<NewcomerService>()
 				.AddSingleton<WikiSearcher>()
-				.AddSingleton<PointCounter>()
+				//.AddSingleton<PointCounter>()
 				.AddSingleton<DoYouCare>()
 				.AddSingleton<OutOfOffice>()
 				.AddSingleton<ContributorsList>()
 				.AddSingleton<AmIRight>()
 				.AddSingleton<GettingStartedService>()
-				.AddSingleton<ActivityRoleService>()
+				//.AddSingleton<ActivityRoleService>()
 				.AddSingleton<UserJoinManagement>()
 				.AddSingleton<RoutineAnnouncementService>()
 				//Migrate

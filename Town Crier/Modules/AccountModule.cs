@@ -19,7 +19,7 @@ namespace TownCrier
 	public class AccountModule : InteractiveBase<SocketCommandContext>
 	{
 		public const string LinkUrl = "https://accounts.townshiptale.com/oauth2/ui/link/discord";
-		public AltaAPI AltaApi { get; set; }
+		public AltaAPI AltaApi { get; set; }m
 		public TownDatabase Database { get; set; }
 
 		//public AccountService AccountService { get; set; }
